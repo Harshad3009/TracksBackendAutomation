@@ -24,7 +24,11 @@ public class ConfigManager {
      * @return the property value
      */
     public static String get(String key) {
-        return properties.getProperty(key);
+        String value = properties.getProperty(key);
+        if (value == null || value.isEmpty()) {
+            throw new RuntimeException("Configuration key not found or empty: " + key);
+        }
+        return value;
     }
 
     /**
