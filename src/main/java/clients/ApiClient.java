@@ -27,7 +27,7 @@ public class ApiClient {
                 contentType(ContentType.XML).
                 body(xmlRequest).
                 when().
-                post("/createUser").
+                post("/users.xml").
                 then().
                 extract().
                 response();
