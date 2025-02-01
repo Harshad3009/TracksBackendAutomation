@@ -13,19 +13,17 @@ public class ApiClient {
 
     private final String baseUrl;
     private final CookieStore cookieStore;
-    private final CloseableHttpClient httpClient;
 
     public ApiClient(String baseUrl) {
         this.baseUrl = baseUrl;
         this.cookieStore = new BasicCookieStore();
-        this.httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
     }
 
-    public Response createUser(String xmlRequest) {
+    public Response sendPostResponse(String endpoint, Object body) {
         return  given().
                 baseUri(baseUrl).
                 contentType(ContentType.XML).
-                body(xmlRequest).
+                body(body).
                 when().
                 post("/users.xml").
                 then().
