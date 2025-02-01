@@ -19,7 +19,7 @@ public class ApiClient {
         this.cookieStore = new BasicCookieStore();
     }
 
-    public Response sendPostResponse(String endpoint, Object body) {
+    public Response sendPostResponse(String endpoint, String body) {
         return  given().
                 baseUri(baseUrl).
                 contentType(ContentType.XML).
