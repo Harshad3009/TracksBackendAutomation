@@ -3,6 +3,7 @@ package clients;
 import io.restassured.http.Cookies;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
+import utils.AuthHelper;
 
 import static io.restassured.RestAssured.given;
 
@@ -11,16 +12,16 @@ public class TracksAppAsApi {
     private final String baseUrl;
     private final String adminUsername;
     private final String adminPassword;
-    private Cookies sessionCookies;
-    private String authenticity_token;
+    private final AuthHelper authHelper;
 
     public TracksAppAsApi(String baseUrl, String adminUsername, String adminPassword) {
         this.baseUrl = baseUrl;
         this.adminUsername = adminUsername;
         this.adminPassword = adminPassword;
+        this.authHelper = new AuthHelper(adminUsername, adminPassword);
     }
 
-    public void fetchSingupPage() {
+    public Response fetchSignupPage() {
         Response response = given().
                 baseUri(baseUrl).
                 auth().preemptive().basic(adminUsername,adminPassword).
@@ -31,29 +32,20 @@ public class TracksAppAsApi {
             throw new RuntimeException("Failed to fetch signup page: " + response.getStatusCode());
         }
 
-        // Getting authenticity_token from the login page html
-        authenticity_token = getAuthenticityTokenFromResponse(response);
-        if(authenticity_token == null || authenticity_token.isEmpty()) {
-            throw new RuntimeException("Failed to fetch authenticity_token from signup page");
-        }
-
-        // Storing cookies from login page
-        sessionCookies = response.getDetailedCookies();
+        return response;
 
     }
 
     public Response createUser(String username, String password) {
 
-        fetchSingupPage();
-
         Response response = given().
                 log().all().
                 baseUri(baseUrl).
                 auth().preemptive().basic(adminUsername,adminPassword).
-                cookies(sessionCookies).
+                cookies(authHelper.getSessionCookies()).
                 contentType("application/x-www-form-urlencoded").
                 formParam("utf8","%E2%9C%93").
-                formParam("authenticity_token", authenticity_token).
+                formParam("authenticity_token", authHelper.getAuthenticityToken()).
                 formParam("user[login]", username).
                 formParam("user[password]", password).
                 formParam("user[password_confirmation]", password).
@@ -68,19 +60,8 @@ public class TracksAppAsApi {
         return response;
     }
 
-    private String getAuthenticityTokenFromResponse(Response response) {
-        XmlPath htmlParser = response.body().htmlPath();
-        String auth_token_path =
-                "**.find {it.@name =='authenticity_token'}.@value";
-        return htmlParser.get(auth_token_path);
-    }
-
-    public Cookies getSessionCookies() {
-        return sessionCookies;
-    }
-
-    public String getAuthenticity_token() {
-        return authenticity_token;
+    public AuthHelper getAuthorisation() {
+        return authHelper;
     }
 
 }

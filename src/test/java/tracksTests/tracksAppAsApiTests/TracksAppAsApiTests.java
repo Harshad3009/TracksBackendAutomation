@@ -7,6 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import utils.AuthHelper;
 
 import java.util.Random;
 
@@ -21,15 +22,16 @@ public class TracksAppAsApiTests extends BaseTest {
 
     @Test
     public void fetchSignupPageTest() {
-        tracksAppAsApi.fetchSingupPage();
+        Response signUpPageResponse = tracksAppAsApi.fetchSignupPage();
+        AuthHelper authHelper = new AuthHelper(signUpPageResponse);
         SoftAssert softAssert = new SoftAssert();
 
         // validate authenticity_token is fetched and stored
-        softAssert.assertNotNull(tracksAppAsApi.getAuthenticity_token(), "authenticity_token should not be null");
+        softAssert.assertNotNull(authHelper.getAuthenticityToken(), "authenticity_token should not be null");
 
         // Validate cookies are stored
-        softAssert.assertNotNull(tracksAppAsApi.getSessionCookies());
-        softAssert.assertFalse(tracksAppAsApi.getSessionCookies().asList().isEmpty());
+        softAssert.assertNotNull(authHelper.getSessionCookies());
+        softAssert.assertFalse(authHelper.getSessionCookies().asList().isEmpty());
 
         softAssert.assertAll();
 
