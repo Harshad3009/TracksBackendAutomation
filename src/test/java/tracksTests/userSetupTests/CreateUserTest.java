@@ -23,7 +23,8 @@ public class CreateUserTest extends BaseTest {
          CreateUserRequestBody createUserRequestBody = new CreateUserRequestBody(username, password);
          String body = createUserRequestBody.toXml();
          LOGGER.info("Sending XML request: \n" + body);
-         ApiClient apiClient = new ApiClient(BASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD);
+         ApiClient apiClient = new ApiClient(BASE_URL);
+         apiClient.basicAuth(ADMIN_USERNAME, ADMIN_PASSWORD);
          Response response = apiClient.sendPostResponse("/users.xml", body);
          LOGGER.info("Response: \n" + response.asString());
          Assert.assertEquals(response.getStatusCode(), 200);

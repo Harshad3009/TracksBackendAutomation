@@ -3,6 +3,7 @@ package clients;
 import static io.restassured.RestAssured.given;
 
 import io.restassured.http.ContentType;
+import io.restassured.http.Cookies;
 import io.restassured.response.Response;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -12,15 +13,18 @@ import org.apache.http.impl.client.HttpClients;
 public class ApiClient {
 
     private final String baseUrl;
-    private final String username;
-    private final String password;
-    private final CookieStore cookieStore;
+    private String username;
+    private String password;
+    private final Cookies cookieStore;
 
-    public ApiClient(String baseUrl, String username, String password) {
+    public ApiClient(String baseUrl) {
         this.baseUrl = baseUrl;
+        this.cookieStore = new Cookies();
+    }
+
+    public void basicAuth(String username, String password) {
         this.username = username;
         this.password = password;
-        this.cookieStore = new BasicCookieStore();
     }
 
     public Response sendPostResponse(String endpoint, String body) {
@@ -36,7 +40,7 @@ public class ApiClient {
                 response();
     }
 
-    public CookieStore getCookieStore() {
+    public Cookies getCookieStore() {
         return cookieStore;
     }
 }
