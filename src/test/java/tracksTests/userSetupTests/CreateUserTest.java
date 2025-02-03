@@ -8,13 +8,14 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import restidioms.xmlBodies.CreateUserRequestBody;
 
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class CreateUserTest extends BaseTest {
 
     private static final Logger LOGGER = Logger.getLogger(CreateUserTest.class.getName());
-    private final String username = "testuser6";
-    private final String password = "password6";
+    private final String username = "testuser" + new Random().nextInt();
+    private final String password = "password" + new Random().nextInt();
 
      @Test
      public void testCreateUser() {

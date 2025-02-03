@@ -30,7 +30,7 @@ public class ApiClient {
                 contentType(ContentType.XML).
                 body(body).
                 when().
-                post("/users.xml").
+                post(endpoint).
                 then().
                 extract().
                 response();
