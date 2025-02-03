@@ -53,4 +53,8 @@ public class TracksAppAsApi {
         return sessionCookies;
     }
 
+    public String getAuthenticity_token() {
+        return authenticity_token;
+    }
+
 }

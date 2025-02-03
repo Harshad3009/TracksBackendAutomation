@@ -9,6 +9,8 @@ public class BaseTest {
 
     public static final Logger LOGGER = Logger.getLogger(BaseTest.class);
     public static final String BASE_URL = ConfigManager.get("base.url");
+    public static final String ADMIN_USERNAME = ConfigManager.get("adminUserName");
+    public static final String ADMIN_PASSWORD = ConfigManager.get("adminUserPassword");
 
     @BeforeClass
     public void setup() {
