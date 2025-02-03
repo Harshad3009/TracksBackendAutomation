@@ -42,6 +42,32 @@ public class TracksAppAsApi {
 
     }
 
+    public Response createUser(String username, String password) {
+
+        fetchSingupPage();
+
+        Response response = given().
+                log().all().
+                baseUri(baseUrl).
+                auth().preemptive().basic(adminUsername,adminPassword).
+                cookies(sessionCookies).
+                contentType("application/x-www-form-urlencoded").
+                formParam("utf8","%E2%9C%93").
+                formParam("authenticity_token", authenticity_token).
+                formParam("user[login]", username).
+                formParam("user[password]", password).
+                formParam("user[password_confirmation]", password).
+                when().
+                post("/users").
+                andReturn();
+
+        if(response.getStatusCode() != 302) {
+            throw new RuntimeException("Failed to create user: " + response.getStatusCode());
+        }
+
+        return response;
+    }
+
     private String getAuthenticityTokenFromResponse(Response response) {
         XmlPath htmlParser = response.body().htmlPath();
         String auth_token_path =

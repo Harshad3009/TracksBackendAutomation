@@ -2,9 +2,13 @@ package tracksTests.tracksAppAsApiTests;
 
 import base.BaseTest;
 import clients.TracksAppAsApi;
+import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+
+import java.util.Random;
 
 public class TracksAppAsApiTests extends BaseTest {
 
@@ -18,8 +22,6 @@ public class TracksAppAsApiTests extends BaseTest {
     @Test
     public void fetchSignupPageTest() {
         tracksAppAsApi.fetchSingupPage();
-        System.out.println(tracksAppAsApi.getAuthenticity_token());
-        System.out.println(tracksAppAsApi.getSessionCookies());
         SoftAssert softAssert = new SoftAssert();
 
         // validate authenticity_token is fetched and stored
@@ -31,6 +33,14 @@ public class TracksAppAsApiTests extends BaseTest {
 
         softAssert.assertAll();
 
+    }
+
+    @Test
+    public void createUserTest() {
+        Response response = tracksAppAsApi.createUser("testUser" + new Random().nextInt(), "password" + new Random().nextInt());
+
+        Assert.assertEquals(response.getStatusCode(), 302);
+        Assert.assertEquals((response.getHeader("Location")), BASE_URL);
     }
 
 
