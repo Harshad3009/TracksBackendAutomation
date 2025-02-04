@@ -1,8 +1,8 @@
 package clients;
 
 import config.ConfigManager;
+import io.restassured.response.Response;
 import restidioms.xmlBodies.CreateContextRequestBody;
-import restidioms.xmlBodies.CreateUserRequestBody;
 
 public class TracksApi {
 
@@ -14,9 +14,9 @@ public class TracksApi {
         apiClient.basicAuth(username, password);
     }
 
-    public void createContext(String aContext) {
+    public Response createContext(String aContext) {
         CreateContextRequestBody createContextRequestBody = new CreateContextRequestBody(aContext);
-        apiClient.sendPostResponse("/contexts.xml", createContextRequestBody.toXml());
+        return apiClient.sendPostResponse("/contexts.xml", createContextRequestBody.toXml());
     }
 
 }

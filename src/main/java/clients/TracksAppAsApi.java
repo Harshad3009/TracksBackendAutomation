@@ -5,6 +5,8 @@ import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import utils.AuthHelper;
 
+import java.util.logging.Logger;
+
 import static io.restassured.RestAssured.given;
 
 public class TracksAppAsApi {
@@ -13,6 +15,8 @@ public class TracksAppAsApi {
     private final String adminUsername;
     private final String adminPassword;
     private final AuthHelper authHelper;
+
+    private final Logger LOGGER = Logger.getLogger(TracksAppAsApi.class.getName());
 
     public TracksAppAsApi(String baseUrl, String adminUsername, String adminPassword) {
         this.baseUrl = baseUrl;
@@ -52,6 +56,8 @@ public class TracksAppAsApi {
                 when().
                 post("/users").
                 andReturn();
+
+        LOGGER.info("Response: " + response.asString());
 
         if(response.getStatusCode() != 302) {
             throw new RuntimeException("Failed to create user: " + response.getStatusCode());
