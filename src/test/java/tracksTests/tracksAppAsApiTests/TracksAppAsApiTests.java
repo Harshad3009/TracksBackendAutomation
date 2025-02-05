@@ -62,5 +62,21 @@ public class TracksAppAsApiTests extends BaseTest {
         Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
     }
 
+    @Test
+    public void createUserAndAddProjectTest() {
+
+        String userName = "testUser" + new Random().nextInt();
+        String password = "password" + new Random().nextInt();
+        Response response = tracksAppAsApi.createUser(userName, password);
+
+        Assert.assertEquals(response.getStatusCode(), 302);
+        Assert.assertEquals((response.getHeader("Location")), BASE_URL);
+
+        TracksApi tracksApi = new TracksApi(userName, password);
+        response = tracksApi.createProject("testProject");
+        Assert.assertEquals(response.getStatusCode(), 201);
+        Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
+    }
+
 
 }

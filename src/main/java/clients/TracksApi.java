@@ -3,6 +3,7 @@ package clients;
 import config.ConfigManager;
 import io.restassured.response.Response;
 import restidioms.xmlBodies.CreateContextRequestBody;
+import restidioms.xmlBodies.CreateProjectRequestBody;
 
 public class TracksApi {
 
@@ -17,6 +18,11 @@ public class TracksApi {
     public Response createContext(String aContext) {
         CreateContextRequestBody createContextRequestBody = new CreateContextRequestBody(aContext);
         return apiClient.sendPostResponse("/contexts.xml", createContextRequestBody.toXml());
+    }
+
+    public Response createProject(String aProject) {
+        CreateProjectRequestBody createProjectRequestBody = new CreateProjectRequestBody(aProject);
+        return apiClient.sendPostResponse("/projects.xml", createProjectRequestBody.toXml());
     }
 
 }
