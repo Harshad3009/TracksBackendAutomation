@@ -29,13 +29,13 @@ public class ApiClient {
 
     public Response sendPostResponse(String endpoint, String body) {
         return  given().
-                baseUri(baseUrl).
+                baseUri(baseUrl).log().all().
                 auth().preemptive().basic(username, password).
                 contentType(ContentType.XML).
                 body(body).
                 when().
                 post(endpoint).
-                then().
+                then().log().all().
                 extract().
                 response();
     }

@@ -21,7 +21,7 @@ public class SetupTestDataUtilityTest extends BaseTest {
     private static final String PASSWORD_PATTERN = "password@%d";
 
     @Test
-    public void createRandomUsersAndAddContext() {
+    public void createRandomUsersAndAddContextAndProjectAndTask() {
         TracksAppAsApi adminTracks = new TracksAppAsApi(BASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         Map<String, String> userCredentials = generateRandomUserCredentials(NUM_OF_USERS);
@@ -32,6 +32,12 @@ public class SetupTestDataUtilityTest extends BaseTest {
             Response response = userTracks.createContext("testContext");
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
+            response = userTracks.createProject("testProject");
+            Assert.assertEquals(response.getStatusCode(), 201);
+            Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
+            response = userTracks.createTask("testTask", "1", "1");
+            Assert.assertEquals(response.getStatusCode(), 201);
+            Assert.assertTrue(response.getHeader("Location").contains("/todo/"));
         }
     }
 
