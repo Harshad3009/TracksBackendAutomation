@@ -39,6 +39,14 @@ public class TracksAppAsApiTests extends BaseTest {
     }
 
     @Test
+    public void createUserWithCsrfTokenTest() {
+        Response response = tracksAppAsApi.createUserWithCsrf("testUser" + new Random().nextInt(), "password" + new Random().nextInt());
+
+        Assert.assertEquals(response.getStatusCode(), 302);
+        Assert.assertEquals((response.getHeader("Location")), BASE_URL);
+    }
+
+    @Test
     public void createUserTest() {
         Response response = tracksAppAsApi.createUser("testUser" + new Random().nextInt(), "password" + new Random().nextInt());
 
