@@ -28,7 +28,7 @@ public class TracksApi {
 
     public Response createTask(String aTask,  String projectId, String contextId) {
         CreateTaskRequestBody createTaskRequestBody = new CreateTaskRequestBody(aTask, projectId, contextId);
-        return apiClient.sendPostResponse("/tasks.xml", createTaskRequestBody.toXml());
+        return apiClient.sendPostResponse("/todos.xml", createTaskRequestBody.toXml());
     }
 
 

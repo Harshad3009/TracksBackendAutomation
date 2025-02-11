@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utils.AuthHelper;
+import utils.ResponseValidator;
 
 import java.util.Random;
 
@@ -101,16 +102,16 @@ public class TracksAppAsApiTests extends BaseTest {
         response = tracksApi.createContext("testContext");
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
-
+        int contextId = ResponseValidator.extractIdFromLocation(response);
 
         response = tracksApi.createProject("testProject");
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
-        System.out.println(response.getHeader("Location"));
+        int projectId = ResponseValidator.extractIdFromLocation(response);
 
-        response = tracksApi.createTask("testTask", "testProject", "testContext");
+        response = tracksApi.createTask("testTask3", String.valueOf(projectId), String.valueOf(contextId));
         Assert.assertEquals(response.getStatusCode(), 201);
-        Assert.assertTrue(response.getHeader("Location").contains("/todo/"));
+        Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
     }
 
 
