@@ -2,6 +2,7 @@ package utils;
 
 import io.restassured.response.Response;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,14 @@ public class ResponseValidator {
         } else {
             throw new IllegalArgumentException("Invalid response URL format: " + responseUrl);
         }
+    }
+
+    public static List<String> extractContextIdsFromResponse(Response response) {
+        return response.xmlPath().getList("contexts.context.id");
+    }
+
+    public static List<String> extractProjectIdsFromResponse(Response response) {
+        return response.xmlPath().getList("projects.project.id");
     }
 
 }
