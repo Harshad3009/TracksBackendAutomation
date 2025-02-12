@@ -10,12 +10,16 @@ import org.testng.annotations.Test;
 import utils.ResponseValidator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 //@Ignore
 public class SetupTestDataUtilityTest extends BaseTest {
 
     private static final int NUM_OF_USERS = 5;
+    private static final int MAX_TASKS_PER_PROJECT = 10;
+    List<String> contextNames = List.of("Work", "Home", "Shopping");
 
     // Username and Password patterns
     private static final String USERNAME_PATTERN = "userName%d";
@@ -41,6 +45,35 @@ public class SetupTestDataUtilityTest extends BaseTest {
             response = userTracks.createTask("testTask", String.valueOf(projectId), String.valueOf(contextId));
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
+        }
+    }
+
+    public void createUserAndAddRandomNumberOfTasks() {
+        TracksAppAsApi adminTracks = new TracksAppAsApi(BASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD);
+
+        Map<String, String> userCredentials = generateRandomUserCredentials(NUM_OF_USERS);
+
+        for (Map.Entry<String, String> user : userCredentials.entrySet()) {
+            adminTracks.createUser(user.getKey(), user.getValue());
+            TracksApi userTracks = new TracksApi(user.getKey(), user.getValue());
+            Response response;
+            for (String contextName : contextNames) {
+                response = userTracks.createContext(contextName);
+                Assert.assertEquals(response.getStatusCode(), 201);
+                Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
+            }
+            for (int i = 0; i < 5; i++) {
+                response = userTracks.createProject("testProject" + i);
+                Assert.assertEquals(response.getStatusCode(), 201);
+                Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
+            }
+
+            int numberOfTasks = new Random().nextInt(MAX_TASKS_PER_PROJECT) + 1;
+            for (int i = 0; i < numberOfTasks; i++) {
+                response = userTracks.createTask("testTask" + i, String.valueOf(1), String.valueOf(1));
+                Assert.assertEquals(response.getStatusCode(), 201);
+                Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
+            }
         }
     }
 
