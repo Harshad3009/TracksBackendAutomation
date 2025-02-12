@@ -40,6 +40,17 @@ public class ApiClient {
                 response();
     }
 
+    public Response sendGetResponse(String endpoint) {
+        return  given().
+                baseUri(baseUrl).log().all().
+                auth().preemptive().basic(username, password).
+                when().
+                get(endpoint).
+                then().log().all().
+                extract().
+                response();
+    }
+
     public Cookies getCookieStore() {
         return cookieStore;
     }

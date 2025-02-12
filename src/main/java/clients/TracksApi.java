@@ -31,6 +31,18 @@ public class TracksApi {
         return apiClient.sendPostResponse("/todos.xml", createTaskRequestBody.toXml());
     }
 
+    public Response getUsersContexts() {
+        return apiClient.sendGetResponse("/contexts.xml");
+    }
+
+    public Response getUsersProjects() {
+        return apiClient.sendGetResponse("/projects.xml");
+    }
+
+    public Response getUsersTasks() {
+        return apiClient.sendGetResponse("/todos.xml");
+    }
+
 
 
 }
