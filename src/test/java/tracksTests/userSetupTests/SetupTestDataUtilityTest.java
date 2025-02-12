@@ -17,8 +17,8 @@ import java.util.Random;
 //@Ignore
 public class SetupTestDataUtilityTest extends BaseTest {
 
-    private static final int NUM_OF_USERS = 5;
-    private static final int MAX_TASKS_PER_PROJECT = 10;
+    private static final int NUM_OF_USERS = 2;
+    private static final int MAX_TASKS = 20;
     List<String> contextNames = List.of("Work", "Home", "Shopping");
 
     // Username and Password patterns
@@ -48,6 +48,7 @@ public class SetupTestDataUtilityTest extends BaseTest {
         }
     }
 
+    @Test
     public void createUserAndAddRandomNumberOfTasks() {
         TracksAppAsApi adminTracks = new TracksAppAsApi(BASE_URL, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -68,9 +69,16 @@ public class SetupTestDataUtilityTest extends BaseTest {
                 Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
             }
 
-            int numberOfTasks = new Random().nextInt(MAX_TASKS_PER_PROJECT) + 1;
+            response = userTracks.getUsersContexts();
+            List<String> contextIds = ResponseValidator.extractContextIdsFromResponse(response);
+            response = userTracks.getUsersProjects();
+            List<String> projectIds = ResponseValidator.extractProjectIdsFromResponse(response);
+
+            int numberOfTasks = new Random().nextInt(MAX_TASKS) + 1;
             for (int i = 0; i < numberOfTasks; i++) {
-                response = userTracks.createTask("testTask" + i, String.valueOf(1), String.valueOf(1));
+                response = userTracks.createTask("testTask" + i,
+                        String.valueOf(projectIds.get(new Random().nextInt(projectIds.size()))),
+                        String.valueOf(contextIds.get(new Random().nextInt(contextIds.size()))));
                 Assert.assertEquals(response.getStatusCode(), 201);
                 Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
             }
@@ -80,7 +88,7 @@ public class SetupTestDataUtilityTest extends BaseTest {
     private Map<String, String> generateRandomUserCredentials(int count) {
         Map<String, String> userCredentials = new HashMap<>();
         for(int i = 0; i < count; i++) {
-            userCredentials.put(String.format(USERNAME_PATTERN, i), String.format(PASSWORD_PATTERN, i));
+            userCredentials.put(String.format(USERNAME_PATTERN, new Random().nextInt()), String.format(PASSWORD_PATTERN, new Random().nextInt()));
         }
         return userCredentials;
     }
