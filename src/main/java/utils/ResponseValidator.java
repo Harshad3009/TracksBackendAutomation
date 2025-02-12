@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class ResponseValidator {
 
-    private static final String LOCATION_PATTERN = "^http:\\/\\/\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}\\/(contexts|projects)\\/(\\d+)$";
+    private static final String LOCATION_PATTERN = "^http:\\/\\/\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}:\\d{1,5}\\/(contexts|projects|todos)\\/(\\d+)$";
 
     public static void validateStatusCode(Response response, int expectedStatusCode) {
         if (response.getStatusCode() != expectedStatusCode) {

@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+import utils.ResponseValidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,12 +33,14 @@ public class SetupTestDataUtilityTest extends BaseTest {
             Response response = userTracks.createContext("testContext");
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
+            int contextId = ResponseValidator.extractIdFromLocation(response);
             response = userTracks.createProject("testProject");
             Assert.assertEquals(response.getStatusCode(), 201);
-            Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
-            response = userTracks.createTask("testTask", "1", "1");
+            Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
+            int projectId = ResponseValidator.extractIdFromLocation(response);
+            response = userTracks.createTask("testTask", String.valueOf(projectId), String.valueOf(contextId));
             Assert.assertEquals(response.getStatusCode(), 201);
-            Assert.assertTrue(response.getHeader("Location").contains("/todo/"));
+            Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
         }
     }
 

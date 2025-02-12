@@ -112,6 +112,7 @@ public class TracksAppAsApiTests extends BaseTest {
         response = tracksApi.createTask("testTask3", String.valueOf(projectId), String.valueOf(contextId));
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
+        int taskId = ResponseValidator.extractIdFromLocation(response);
     }
 
 
