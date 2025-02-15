@@ -13,6 +13,8 @@ import utils.ResponseValidator;
 
 import java.util.Random;
 
+import static utils.RandomNameGenerator.*;
+
 public class TracksAppAsApiTests extends BaseTest {
 
     private static TracksAppAsApi tracksAppAsApi;
@@ -66,7 +68,7 @@ public class TracksAppAsApiTests extends BaseTest {
         Assert.assertEquals((response.getHeader("Location")), BASE_URL);
 
         TracksApi tracksApi = new TracksApi(userName, password);
-        response = tracksApi.createContext("testContext");
+        response = tracksApi.createContext(getRandomContextName());
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
     }
@@ -82,7 +84,7 @@ public class TracksAppAsApiTests extends BaseTest {
         Assert.assertEquals((response.getHeader("Location")), BASE_URL);
 
         TracksApi tracksApi = new TracksApi(userName, password);
-        response = tracksApi.createProject("testProject");
+        response = tracksApi.createProject(getRandomProjectName());
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
     }
@@ -99,17 +101,17 @@ public class TracksAppAsApiTests extends BaseTest {
 
         TracksApi tracksApi = new TracksApi(userName, password);
 
-        response = tracksApi.createContext("testContext");
+        response = tracksApi.createContext(getRandomContextName());
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
         int contextId = ResponseValidator.extractIdFromLocation(response);
 
-        response = tracksApi.createProject("testProject");
+        response = tracksApi.createProject(getRandomProjectName());
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
         int projectId = ResponseValidator.extractIdFromLocation(response);
 
-        response = tracksApi.createTask("testTask3", String.valueOf(projectId), String.valueOf(contextId));
+        response = tracksApi.createTask(getRandomTaskName(), String.valueOf(projectId), String.valueOf(contextId));
         Assert.assertEquals(response.getStatusCode(), 201);
         Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
         int taskId = ResponseValidator.extractIdFromLocation(response);
