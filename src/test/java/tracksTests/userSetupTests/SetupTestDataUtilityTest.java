@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static utils.RandomNameGenerator.*;
+
 //@Ignore
 public class SetupTestDataUtilityTest extends BaseTest {
 
-    private static final int NUM_OF_USERS = 2;
+    private static final int NUM_OF_USERS = 5;
     private static final int MAX_TASKS = 20;
     List<String> contextNames = List.of("Work", "Home", "Shopping");
 
@@ -34,15 +36,15 @@ public class SetupTestDataUtilityTest extends BaseTest {
         for (Map.Entry<String, String> user : userCredentials.entrySet()) {
             adminTracks.createUser(user.getKey(), user.getValue());
             TracksApi userTracks = new TracksApi(user.getKey(), user.getValue());
-            Response response = userTracks.createContext("testContext");
+            Response response = userTracks.createContext(getRandomContextName());
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
             int contextId = ResponseValidator.extractIdFromLocation(response);
-            response = userTracks.createProject("testProject");
+            response = userTracks.createProject(getRandomProjectName());
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
             int projectId = ResponseValidator.extractIdFromLocation(response);
-            response = userTracks.createTask("testTask", String.valueOf(projectId), String.valueOf(contextId));
+            response = userTracks.createTask(getRandomTaskName(), String.valueOf(projectId), String.valueOf(contextId));
             Assert.assertEquals(response.getStatusCode(), 201);
             Assert.assertTrue(response.getHeader("Location").contains("/todos/"));
         }
@@ -58,13 +60,13 @@ public class SetupTestDataUtilityTest extends BaseTest {
             adminTracks.createUser(user.getKey(), user.getValue());
             TracksApi userTracks = new TracksApi(user.getKey(), user.getValue());
             Response response;
-            for (String contextName : contextNames) {
+            for (String contextName : CONTEXT_NAMES) {
                 response = userTracks.createContext(contextName);
                 Assert.assertEquals(response.getStatusCode(), 201);
                 Assert.assertTrue(response.getHeader("Location").contains("/contexts/"));
             }
             for (int i = 0; i < 5; i++) {
-                response = userTracks.createProject("testProject" + i);
+                response = userTracks.createProject(getRandomProjectName() + i);
                 Assert.assertEquals(response.getStatusCode(), 201);
                 Assert.assertTrue(response.getHeader("Location").contains("/projects/"));
             }
@@ -76,7 +78,7 @@ public class SetupTestDataUtilityTest extends BaseTest {
 
             int numberOfTasks = new Random().nextInt(MAX_TASKS) + 1;
             for (int i = 0; i < numberOfTasks; i++) {
-                response = userTracks.createTask("testTask" + i,
+                response = userTracks.createTask(getRandomTaskName() + i,
                         String.valueOf(projectIds.get(new Random().nextInt(projectIds.size()))),
                         String.valueOf(contextIds.get(new Random().nextInt(contextIds.size()))));
                 Assert.assertEquals(response.getStatusCode(), 201);
