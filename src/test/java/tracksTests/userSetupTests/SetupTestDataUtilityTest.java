@@ -19,7 +19,7 @@ import static utils.RandomNameGenerator.*;
 //@Ignore
 public class SetupTestDataUtilityTest extends BaseTest {
 
-    private static final int NUM_OF_USERS = 5;
+    private static final int NUM_OF_USERS = 10;
     private static final int MAX_TASKS = 20;
     List<String> contextNames = List.of("Work", "Home", "Shopping");
 

@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="TracksBackendAutomation" options="--add-exports jdk.internal.opt/jdk.internal.joptsimple.internal=ALL-UNNAMED" />
+      <module name="TracksBackendAutomation" options="" />
     </option>
   </component>
 </project>
